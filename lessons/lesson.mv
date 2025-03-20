@@ -1161,6 +1161,7 @@ Print eqmx.
 
 About mxdirectE.
 About mxdirect_addsP.
+Search "mxdirect".
 ```
 
 ---
@@ -1181,7 +1182,7 @@ About row_subP.
 About submxMl.
 ```
 
- - $\mathrm{Im} A$ is represented by the square matrix `kermx A`.
+ - $\mathrm{Ker} A$ is represented by the square matrix `kermx A`.
 
 ```coq
 About kermx.
@@ -1208,6 +1209,25 @@ Implicit Types (x y z : 'rV[F]_n).
 Lemma Su_rect (x : 'rV_n) : exists (y : 'rV_n) (z : 'rV_n),
   x = y + z *m u /\ (y <= S)%MS && (z <= S)%MS.
 Proof.
+Search proj_mx.
+pose y := x *m proj_mx S u.
+pose zu := x *m proj_mx u S.
+Search (_ <= _)%MS.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 pose y := x *m proj_mx S u.
 have /submxP [z'] := proj_mx_sub u S x => xpu.
 pose z := z' *m proj_mx S u.

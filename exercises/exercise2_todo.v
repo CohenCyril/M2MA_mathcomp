@@ -250,6 +250,8 @@ HB.instance Definition _ := Monoid.isLaw.Build nat 0 op2 op2A op20n op2n0.
 
 Lemma ex_op2 : \big[op2/0]_(i < 3) i = 3.
 Proof.
-Admitted.
+rewrite (big_morph id op2add erefl).
+by rewrite !(big_ord_recr, big_ord0)/=.
+Qed.
 
 End cex.

@@ -1214,6 +1214,7 @@ About sub_kermxP.
 *)
 Section ex_6_12.
 
+
 Variables (F : fieldType) (n' : nat).
 Let n := n'.+1.
 Variable (u : 'M[F]_n) (S : 'M[F]_n).
@@ -1226,14 +1227,15 @@ Lemma Su_rect (x : 'rV_n) : exists (y : 'rV_n) (z : 'rV_n),
   x = y + z *m u /\ (y <= S)%MS && (z <= S)%MS.
 Proof.
 pose y := x *m proj_mx S u.
-have /submxP [z'] := proj_mx_sub u S x => xpu.
+pose zu := x *m proj_mx u S.
+have /submxP[z' eq_z'u] : (zu <= u)%MS by rewrite proj_mx_sub.
 pose z := z' *m proj_mx S u.
-exists y, z => /=; split; last by rewrite !proj_mx_sub.
-rewrite -{1}(@add_proj_mx _ _ _ S u x) ?S_u_direct ?S_u_eq1 ?submx1 //.
-congr (_ + _); apply/eqP; rewrite xpu -subr_eq0 -mulmxBl.
-apply/eqP/sub_kermxP.
-by rewrite eq_keru_imu proj_mx_compl_sub ?S_u_eq1 ?submx1.
+exists y, z; suff -> : z *m u = z' *m u.
+  by rewrite -eq_z'u /zu add_proj_mx// ?S_u_eq1 ?submx1// !proj_mx_sub.
+apply/esym/subr0_eq. rewrite -mulmxBl; apply/sub_kermxP.
+by rewrite eq_keru_imu /z proj_mx_compl_sub// ?S_u_eq1 ?submx1.
 Qed.
+
 
 Lemma Su_dec_eq0 y z : (y <= S)%MS -> (z <= S)%MS ->
   (y + z *m u == 0) = (y == 0) && (z == 0).
@@ -1243,8 +1245,8 @@ move=> yS zS; apply/idP/idP; last first.
 rewrite addr_eq0 -mulNmx => /eqP eq_y_Nzu.
 have : (y <= S :&: u)%MS by rewrite sub_capmx yS eq_y_Nzu submxMl.
 rewrite S_u_direct // submx0 => /eqP y_eq0.
-move/eqP: eq_y_Nzu; rewrite y_eq0 eq_sym mulNmx oppr_eq0 eqxx /= => /eqP.
-move=> /sub_kermxP; rewrite eq_keru_imu => z_keru.
+move: eq_y_Nzu => /eqP; rewrite y_eq0 eq_sym mulNmx oppr_eq0 eqxx /= => /eqP.
+move=> /sub_kermxP; rewrite eq_keru_imu => z_u.
 have : (z <= S :&: u)%MS by rewrite sub_capmx zS.
 by rewrite S_u_direct // submx0.
 Qed.

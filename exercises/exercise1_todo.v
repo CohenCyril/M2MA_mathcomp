@@ -20,14 +20,21 @@ Proof. by case: p; case: q. Qed.
    - prove that as you like
 *)
 Lemma Pierce p q : ((p ==> q) ==> p) ==> p.
-Proof. Admitted.
+Proof. by case: p; case: q. Qed.
 
 (**
 ** Exercise 3:
     - look for lemmas supporting contrapositive reasoning
 *)
 Lemma bool_gimmics1 i : i != i.-1 -> i != 0.
-Proof. Admitted.
+Proof.
+move: i.
+fix H 1.
+apply: H.
+Admitted.
+(* 
+by case: (eqVneq i 0) => // ->.
+Admitted. *)
 
 (**
 ** Exercise 4:
@@ -36,7 +43,10 @@ Proof. Admitted.
     - now find another proof without the view
 *)
 Lemma find_me p q :  (~~ p) = q -> p (+) q.
-Proof. Admitted.
+Proof.
+  move=> <-.
+  by case: p.
+Qed.
 
 (**
 ** Exercise 5:
@@ -44,7 +54,10 @@ Proof. Admitted.
    - any proof would do, but there is one not using [implyP]
 *)
 Lemma view_gimmics1 p a b : p -> (p ==> (a == b.*2)) -> a./2 = b.
-Proof. Admitted.
+Proof.
+move=> -> /= /eqP ->.
+by apply: doubleK.
+Qed.
 
 (**
 ** Exercise 6:
@@ -53,16 +66,19 @@ Proof. Admitted.
 *)
 Lemma bool_gimmics2 p q r : ~~ p && (r == q) -> q ==> (p || r).
 Proof.
-Admitted.
+move=> /andP [_ /eqP ->].
+apply/implyP=> ->.
+by rewrite orbT.
+Qed.
 
 (**
 ** Exercise 7:
     - look up the definition of [iter]
     - prove this statement by induction
 *)
-Lemma iterSr A n (f : A -> A) x : iter n.+1 f x = iter n f (f x).
-Proof.
-Admitted.
+Lemma iterSr A n (f : A -> A) x :
+  iter n.+1 f x = iter n f (f x).
+Proof. by elim: n => [//|n /= <-]. Qed.
 
 (**
 ** Exercise 8:
@@ -71,7 +87,11 @@ Admitted.
     - prove the following statement by induction
 *)
 Lemma iter_predn m n : iter n predn m = m - n.
-Proof. Admitted.
+Proof. 
+elim: n => [|n /= ->].
+  by rewrite subn0.
+by rewrite subnS.
+Qed.
 
 (**
 ** Exercise 9:
